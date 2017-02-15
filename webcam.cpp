@@ -64,12 +64,12 @@ errno_exit                      (const char *           s)
     fprintf (stderr, "%s error %d, %s\n",
              s, errno, strerror (errno));
 
-    //exit (EXIT_FAILURE);
+    exit (EXIT_FAILURE);
 }
 static void
 errno_exit                      (int status)
 {
-    (void)(status);
+    exit (status);
 }
 
 static int
@@ -691,7 +691,7 @@ ImgClass Webcam::snap()
 }
 
 /**
- * @brief  建立后台线程并开始拍摄并
+ * @brief  建立后台线程并开始拍摄
  * @date   2017-01-23
  * @author LiuShuai
  */
