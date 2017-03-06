@@ -607,14 +607,14 @@ open_device                     (void)
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <mutex>
 using namespace std;
 
 static thread frameThread;
-static atomic_int readyImgPos(0);
 static atomic_bool isRun(false);
-static atomic_bool framePsuse(false);
 static JPGImage imgBuffer[2];
-
+static volatile int readyImgPos = 0;
+static mutex imgLock;
 /**
  * @brief  当从V4L2收到一帧数据时会被调用
  * @date   2016-12-15
@@ -629,8 +629,11 @@ static void process_image(void *data, size_t length)
 #endif
     if(Webcam::isStreamMode)
     {
+        imgLock.lock();
         imgBuffer[1-readyImgPos].data = (unsigned char *)data;
+        imgBuffer[1-readyImgPos].size = length;
         readyImgPos = 1-readyImgPos;
+        imgLock.unlock();
     }
     else
     {
@@ -643,9 +646,6 @@ static void autoframe()
     while(isRun)
     {
         frame();
-        while(framePsuse) {
-            usleep(1);
-        }
     }
 }
 
@@ -706,6 +706,7 @@ void Webcam::start()
  * @brief  获取流中最新的jpg图片
  * @date   2017-01-23
  * @update 2017-02-04
+ * @update 2017-03-06
  * @author LiuShuai
  */
 ImgClass Webcam::getImg()
@@ -714,10 +715,11 @@ ImgClass Webcam::getImg()
     cout<<"Webcam::getImg"<<endl;
     cout<<"imgBuffer[readyImgPos].size = "<<imgBuffer[readyImgPos].size<<endl;
 #endif
-    pause();
+    imgLock.lock();
     imgBuffer[readyImgPos].size = jpgClean(imgBuffer[readyImgPos].data, imgBuffer[readyImgPos].size);
-    goon();
-    return ImgClass(imgBuffer[readyImgPos]);;
+    auto img = ImgClass(imgBuffer[readyImgPos]);
+    imgLock.unlock();
+    return img;
 }
 
 /**
@@ -727,7 +729,9 @@ ImgClass Webcam::getImg()
  */
 void Webcam::pause()
 {
-    framePsuse = true;
+    if(Webcam::isStreamMode) {
+        imgLock.lock();
+    }
 }
 
 /**
@@ -737,7 +741,9 @@ void Webcam::pause()
  */
 void Webcam::goon()
 {
-    framePsuse = false;
+    if(Webcam::isStreamMode) {
+        imgLock.unlock();
+    }
 }
 
 /**

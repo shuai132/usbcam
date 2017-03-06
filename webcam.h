@@ -95,13 +95,11 @@ public:
     void start();                   //开启流模式
     ImgClass getImg();              //获取最新的一张jpg图片
     void stop();
+    void pause();
+    void goon();
 
     bool isOpen = false;
     static bool isStreamMode;
-
-private:
-    void pause();
-    void goon();
 };
 
 #endif // WEBCAM_H
