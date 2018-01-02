@@ -1,5 +1,5 @@
-OBJS = jpgd.o jpge.o webcam.o grab.o mytools.o
-target  = v4l2
+OBJS = jpgd.o jpge.o usbcam.o main.o mytools.o
+target  = usbcam
 CXXFLAG = -std=c++11 -Wall
 LDFLAGS = -pthread
 

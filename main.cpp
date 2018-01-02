@@ -7,7 +7,7 @@
 #include <fstream>
 #include <unistd.h>
 
-#include "webcam.h"
+#include "usbcam.h"
 #include "jpge.h"
 #include "jpgd.h"
 
@@ -17,19 +17,19 @@ using namespace jpgd;
 
 int main(int argc, char** argv)
 {
-    Webcam webcam("/dev/video0", 3264, 2448);
-    if(!webcam.isOpen) {
+    Webcam usbcam("/dev/video0", 3264, 2448);
+    if(!usbcam.isOpen) {
         return 0;
     }
 
     //测试单帧拍摄模式
-    //ImgClass img = webcam.snap();
+    //ImgClass img = usbcam.snap();
 
     //测试流模式
-    webcam.start();     //开启后台线程处理
+    usbcam.start();     //开启后台线程处理
     sleep(10);          //后台线程运行10s(用于测试帧率)
-    ImgClass img = webcam.getImg(); //获取流中最新的jpg图片
-    webcam.stop();      //关闭并停止拍摄线程
+    ImgClass img = usbcam.getImg(); //获取流中最新的jpg图片
+    usbcam.stop();      //关闭并停止拍摄线程
 
     cout<<"getImg:"<<endl;
     cout<<"img.width:  "<<img.width<<endl;

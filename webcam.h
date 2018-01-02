@@ -1,5 +1,5 @@
-#ifndef WEBCAM_H
-#define WEBCAM_H
+#ifndef USBCAM_H
+#define USBCAM_H
 
 /**
  * @brief  Small C++ wrapper around V4L
@@ -102,4 +102,4 @@ public:
     static bool isStreamMode;
 };
 
-#endif // WEBCAM_H
+#endif // USBCAM_H

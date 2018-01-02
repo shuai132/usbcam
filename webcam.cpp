@@ -1,4 +1,4 @@
-#include "webcam.h"
+#include "usbcam.h"
 
 #include "mytools.h"
 
