@@ -6,12 +6,13 @@ Linux下使用V4L2框架的USB摄像头测试程序以及C++封装，并在用�
 注：当前捕获模式使用V4L2_PIX_FMT_MJPEG，所以摄像头需要支持MJPEG编码方式。
 
 ## Require 
-`gcc` `g++`
+* cmake
+* gcc/clang
  
 ## Usage 
-测试用例
-``` 
+```
+mkdir build && cd build
+cmake ..
 make
-./usbcam
+./test
 ``` 
-Have Fun ~
